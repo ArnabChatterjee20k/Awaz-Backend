@@ -1,15 +1,11 @@
-from typing import Union
-
 from fastapi import FastAPI
+from api.resources.User import User
+from api.db.db import engine,Base
 
-app = FastAPI()
+import uvicorn
+api = FastAPI()
 
+api.include_router(User.router,prefix="/user")
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
-
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
+if __name__ == "__main__":
+    uvicorn.run("main:api",reload=True)
