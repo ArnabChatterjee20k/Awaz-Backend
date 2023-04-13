@@ -4,7 +4,7 @@ from api.models.User import User
 from api.utils.Token import verify_password
 from fastapi import HTTPException
 from pydantic import EmailStr
-
+from api.utils.db_utils import add_to_db
 def get_user_by_id(db:Session,id:int):
     user = db.query(User).filter(User.id == id).first()
     if not user:
@@ -27,9 +27,7 @@ def create_new_user(db: Session, user: UserCreate):
     new_user_details = UserBase(**user.dict())
     new_user = User(**new_user_details.dict())
     new_user.password = user.password
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
+    add_to_db(db,new_user)
     return UserResult.from_orm(new_user)
 
 def verify_user(db: Session, email: EmailStr,password:str):

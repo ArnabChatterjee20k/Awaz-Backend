@@ -1,4 +1,5 @@
-from pydantic import BaseModel , UUID4
+from pydantic import BaseModel , UUID4 , EmailStr
+from pprint import pprint
     
 class Cache:
     """A singleton class for initialising the cache"""
@@ -12,18 +13,22 @@ class Cache:
         return cls.__instance
 
     
-    def add(self,id:UUID4,metadata:dict):
-        id = self.id
+    def add(self,id:UUID4|EmailStr,metadata:dict):
         Cache.__cache[id] = metadata
     
-    def remove(self):
-        id = self.id
-        if self[id]:
+    def remove(self,id:UUID4|EmailStr):
+        if Cache.__id_exists_in_cache(id=id):
             Cache.__cache.pop(id)
 
-    def get(self):
-        id = self.id
+    @staticmethod
+    def __id_exists_in_cache(id:UUID4|EmailStr):
+        return id in Cache.__cache
+
+    def get(self,id:UUID4|EmailStr):
         return Cache.__cache.get(id)
+    
+    def get_all(self):
+        return Cache.__cache
     
     def __repr__(self) -> str:
         return str(Cache.__cache)

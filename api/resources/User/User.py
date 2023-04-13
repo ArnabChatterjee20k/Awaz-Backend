@@ -1,10 +1,9 @@
-from fastapi import APIRouter,Depends,HTTPException
-from .schema import UserCreate , UserResult, UserLogin
+from fastapi import APIRouter,Depends
+from .schema import UserCreate , UserLogin
 from .utils import create_new_user , verify_user
 from ...db.db import get_db
 from sqlalchemy.orm import Session
 from api.utils.Token import create_access_token
-from api.utils.Decorators import token_required
 
 router = APIRouter()
 
