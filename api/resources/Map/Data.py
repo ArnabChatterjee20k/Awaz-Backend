@@ -1,0 +1,2 @@
+class MapEvent:
+    danger = "DANGER"
