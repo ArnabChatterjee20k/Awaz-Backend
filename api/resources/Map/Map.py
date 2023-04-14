@@ -1,6 +1,6 @@
 from fastapi import WebSocket , APIRouter , WebSocketDisconnect
 from fastapi.logger import logger
-from .utils import serialise , get_token , store_user_in_cache , broadcast , clear_from_cache
+from .utils import serialise , get_token , store_user_in_cache , clear_from_cache , handle_danger , handle_location
 from .Data import MapEvent
 from api.utils.Token import decode_access_token
 from api.utils.get_error_info import get_error_info
@@ -25,11 +25,14 @@ async def text(ws:WebSocket):
             data = await ws.receive_json()
             data = await serialise(data=data,ws=ws)
             metadata = {"client":ws,"data":data}
-            store_user_in_cache(user_email=email,metadata={"sdf":"dfdf"})
+            store_user_in_cache(user_email=email,metadata={"map_data":metadata})
             
             event = data.event
-            # if event == MapEvent.danger:
-            #     broadcast(ws)
+            coordinates = data.location
+
+            if event == MapEvent.danger:
+                """The client must be present in the cache. Also they must send location event before sending danger events"""
+                await handle_danger(ws=ws,coordinates=coordinates.dict())
     
         except WebSocketDisconnect:
             # to remove the memory leaks
