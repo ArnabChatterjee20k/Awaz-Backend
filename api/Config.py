@@ -10,3 +10,5 @@ class Config:
 
     VONAGE_KEY = environ.get("VONAGE_KEY")
     VONAGE_SECRET = environ.get("VONAGE_SECRET")
+
+    PRODUCTION = environ.get("PRODUCTION") == "PRODUCTION"
