@@ -24,7 +24,7 @@ class Cache:
     def __id_exists_in_cache(id:UUID4|EmailStr):
         return id in Cache.__cache
 
-    def get(self,id:UUID4|EmailStr):
+    def get(self,id:UUID4|EmailStr) -> dict:
         return Cache.__cache.get(id)
     
     def get_all(self):
