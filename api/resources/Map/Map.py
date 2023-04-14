@@ -1,6 +1,6 @@
 from fastapi import WebSocket , APIRouter , WebSocketDisconnect
 from fastapi.logger import logger
-from .utils import serialise , get_token , store_user_in_cache , clear_from_cache , handle_danger , handle_location
+from .utils import serialise , get_token , store_user_in_cache , clear_from_cache , handle_danger , success_response
 from .Data import MapEvent
 from api.utils.Token import decode_access_token
 from api.utils.get_error_info import get_error_info
@@ -31,6 +31,7 @@ async def text(ws:WebSocket):
                 """Just update the location"""
                 metadata = {"client":ws,"data":data}
                 store_user_in_cache(user_email=email,metadata={"map_data":metadata})
+                await success_response(ws)
             
             
             elif event == MapEvent.danger:

@@ -38,6 +38,12 @@ def clear_from_cache(user_email):
     cache.remove(id=user_email)
 
 
+async def error_response(ws:WebSocket,message:str):
+    await ws.send_json({"status":403,"message":message})
+
+async def success_response(ws:WebSocket):
+    await ws.send_json({"status":200,"message":"success"})
+
 async def broadcast(ws: WebSocket, payload: MapCoordinates):
     """
         ws is the current client who is sending the event
@@ -63,6 +69,7 @@ async def broadcast(ws: WebSocket, payload: MapCoordinates):
         """
         
         map_data:dict = connection_data.get("map_data")
+
         if map_data:
             """map_data is None if no client other than the ws is connected to the service"""
             client:WebSocket = map_data.get("client") 
