@@ -84,11 +84,6 @@ async def handle_danger(ws: WebSocket, coordinates: Coordinates):
     await broadcast(ws, payload)
 
 
-def handle_location(ws: WebSocket, coordinates: Coordinates):
-    payload = MapCoordinates(event=MapEvent.location, location=coordinates)
-    broadcast(ws, payload)
-
-
 def distance_between_points(lat1: int | float, lon1: int | float, lat2: int | float, lon2: int | float):
     # convert degrees to radians
     lat1, lon1, lat2, lon2 = map(math.radians, [lat1, lon1, lat2, lon2])

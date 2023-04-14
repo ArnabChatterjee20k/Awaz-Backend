@@ -24,15 +24,19 @@ async def text(ws:WebSocket):
         try:
             data = await ws.receive_json()
             data = await serialise(data=data,ws=ws)
-            metadata = {"client":ws,"data":data}
-            store_user_in_cache(user_email=email,metadata={"map_data":metadata})
-            
             event = data.event
             coordinates = data.location
-
-            if event == MapEvent.danger:
+            
+            if event == MapEvent.location:
+                """Just update the location"""
+                metadata = {"client":ws,"data":data}
+                store_user_in_cache(user_email=email,metadata={"map_data":metadata})
+            
+            
+            elif event == MapEvent.danger:
                 """The client must be present in the cache. Also they must send location event before sending danger events"""
                 await handle_danger(ws=ws,coordinates=coordinates.dict())
+
     
         except WebSocketDisconnect:
             # to remove the memory leaks
